@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:background="@drawable/bottomshape"
+              android:layout_height="80dp"
+              android:layout_marginBottom="10dp"
+              android:orientation="vertical">
+
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="11dp"
+        android:id="@+id/id"
+        android:layout_marginTop="10dp"
+        android:textSize="18sp"
+        android:textColor="#000000"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"/>
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/content"
+        android:textSize="14sp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/id"/>
+
+    <TextView
+        android:text="发送方QQ："
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/id"
+        android:layout_centerHorizontal="true"
+        android:textColor="#000000"
+        android:id="@+id/textView4"
+        android:textSize="12sp"/>
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/del"
+        android:textSize="18sp"
+        android:textColor="#000000"
+        android:layout_alignBottom="@+id/textView4"
+        android:layout_toEndOf="@+id/textView4"
+        android:layout_marginStart="12dp"/>
+</RelativeLayout>

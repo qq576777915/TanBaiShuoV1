@@ -6,4 +6,9 @@
         android:orderInCategory="100"
         android:title="@string/action_settings"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/action_settings1"
+        android:orderInCategory="100"
+        android:title="开源地址"
+        app:showAsAction="never"/>
 </menu>
