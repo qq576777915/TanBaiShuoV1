@@ -14,9 +14,9 @@ public class DummyContent {
     public static final List<DummyItem> ITEMS = new ArrayList<DummyItem>();
 
     public static class DummyItem {
-        public final String id;
-        public final String content;
-        public final String details;
+        public final String id;  // QQ
+        public final String content; //内容
+        public final String details;  //对发送者的描述内容
 
         public DummyItem(String id, String content, String details) {
             this.id = id;

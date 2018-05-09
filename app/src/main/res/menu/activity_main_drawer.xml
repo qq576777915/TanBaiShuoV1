@@ -34,5 +34,6 @@
     <item android:title="此软件永久免费使用"></item>
     <item android:title="如果你是付费购买"></item>
     <item android:title="恭喜你被骗了"></item>
+    <item android:title="当前版本：v1.2"></item>
 
 </menu>

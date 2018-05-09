@@ -1,26 +1,23 @@
 package com.king.tanbaishuo;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
-import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.webkit.WebChromeClient;
@@ -31,7 +28,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.king.tanbaishuo.dummy.DummyContent;
-import com.king.tanbaishuo.util.BitMapUtil;
 import com.king.tanbaishuo.util.SetImageViewUtil;
 
 import org.json.JSONException;
@@ -41,6 +37,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import static com.king.tanbaishuo.dummy.DummyContent.ITEMS;
@@ -52,6 +49,7 @@ public class MainActivity extends AppCompatActivity
     private View headerView;
     private ImageView head_topImg;
 
+    String urlFriend = "https://ti.qq.com/honest-say/friends-received.html?_wv=9191&_wwv=132&_qStyle=1&ADTAG=main";
     String urlLogin = "https://qzone.qq.com/";
     String urlHonest = "https://ti.qq.com/honest-say/my-received.html?_wv=9191&_wwv=132&_qStyle=1&ADTAG=main";
     private WebView webView;
@@ -120,6 +118,7 @@ public class MainActivity extends AppCompatActivity
         recyclerView.setAdapter(adapter);
         webView = (WebView) findViewById(R.id.web_view);
         findViewById(R.id.btn_query).setOnClickListener(this);
+        findViewById(R.id.btn_friend).setOnClickListener(this);
         findViewById(R.id.btn_submit).setOnClickListener(this);
         findViewById(R.id.btn_exit).setOnClickListener(this);
         webView.getSettings().setJavaScriptEnabled(true);
@@ -135,7 +134,7 @@ public class MainActivity extends AppCompatActivity
                         Toast.makeText(MainActivity.this.getApplicationContext(),
                                 "登陆成功，如未查询成功，请重新登录查询",
                                 Toast
-                                .LENGTH_LONG).show();
+                                        .LENGTH_LONG).show();
                         webView.loadUrl(urlHonest);
                     }
                 }
@@ -144,8 +143,9 @@ public class MainActivity extends AppCompatActivity
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public void onLoadResource(WebView paramAnonymousWebView, final String paramAnonymousString) {
-                if (paramAnonymousString.indexOf("cgi-node/honest-say/receive/mine?_client_version=0.0.7&_t=") != -1) {
-                    Log.d(TAG, "拿到地址" + paramAnonymousString);
+                Log.e("拿到地址:::::::", "" + paramAnonymousString);
+                if (paramAnonymousString.indexOf
+                        ("cgi-node/honest-say/receive/mine?_client_version=1.0.1&_t=") != -1) {
                     cookieManager = CookieManager.getInstance();
                     new Thread() {
                         @Override
@@ -163,13 +163,13 @@ public class MainActivity extends AppCompatActivity
                                     BufferedReader reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), "utf-8"));
                                     String str = "";
                                     if ((str = reader.readLine()) != null) {
-                                        Log.d(TAG, "run: 1" + str);
+                                        Log.d(TAG, "自己拿到源码：：：：：" + str);
                                         JSONObject jsonObject1 = new JSONObject(str);
                                         if (jsonObject1.getString("code").equals("2333333")) {
                                             Toast.makeText(MainActivity.this, "查询错误，未知错误", Toast.LENGTH_SHORT).show();
                                         } else {
                                             String ss = new Decrypter().Decrypt(str);
-                                            ITEMS.clear();
+//                                            ITEMS.clear();
                                             String s[] = ss.split("\n");
                                             for (int i = 0; i < s.length; i++) {
                                                 Log.d(TAG, "run: " + i + "--" + s[i]);
@@ -197,6 +197,64 @@ public class MainActivity extends AppCompatActivity
                                 Toast.makeText(MainActivity.this, "加载失败未知错误", Toast.LENGTH_SHORT).show();
                                 e.printStackTrace();
                             } catch (JSONException e) {
+                                e.printStackTrace();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }.start();
+                } else if (paramAnonymousString.indexOf
+                        ("cgi-node/honest-say/receive/friends?_client_version=1.0.1&_t=") != -1){
+                    Log.e("进入好友查询界面","");
+                    cookieManager = CookieManager.getInstance();
+                    new Thread(){
+                        @Override
+                        public void run() {
+                            try{
+                                URL url = new URL(paramAnonymousString);
+                                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                                urlConnection.setConnectTimeout(5000);
+                                urlConnection.setReadTimeout(5000);
+                                urlConnection.setRequestProperty("cookie", cookie);
+                                Log.d(TAG, "加载地址" + paramAnonymousString);
+                                int responsecode = urlConnection.getResponseCode();
+                                if (responsecode == 200) {
+                                    Log.d(TAG, "响应成功，正在读取中");
+                                    BufferedReader reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), "utf-8"));
+                                    String str = "";
+                                    if ((str = reader.readLine()) != null) {
+                                        Log.d(TAG, "好友拿到源码：：：：：" + str);
+                                        JSONObject jsonObject1 = new JSONObject(str);
+                                        if (jsonObject1.getString("code").equals("2333333")) {
+                                            Toast.makeText(MainActivity.this, "查询错误，未知错误", Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            String ss = new Decrypter().Decrypt_1(str);
+                                            String s[] = ss.split("\n");
+                                            for (int i = 0; i < s.length; i++) {
+                                                Log.d(TAG, "run: " + i + "--" + s[i]);
+                                                String[] s1 = s[i].split("\\|");
+                                                ITEMS.add(new DummyContent.DummyItem(s1[0], s1[1], s1[2]));
+                                            }
+                                            runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    webView.setVisibility(View.GONE);
+                                                    recyclerView.setVisibility(View.VISIBLE);
+                                                    adapter.notifyDataSetChanged();
+                                                    Toast.makeText(MainActivity.this, "查询成功", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+
+                                        }
+
+                                    }
+                                } else {
+                                    Log.d(TAG, "获取不到网页的源码，服务器响应代码为：" + responsecode);
+                                    Toast.makeText(MainActivity.this, "加载失败未知错误", Toast.LENGTH_SHORT).show();
+                                }
+                            } catch (MalformedURLException e) {
+                                e.printStackTrace();
+                            } catch (IOException e) {
                                 e.printStackTrace();
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -231,6 +289,14 @@ public class MainActivity extends AppCompatActivity
                 webView.setVisibility(View.VISIBLE);
                 recyclerView.setVisibility(View.GONE);
                 webView.loadUrl(urlHonest);
+                ITEMS.clear();
+                break;
+            }
+            case R.id.btn_friend: {
+                webView.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
+                webView.loadUrl(urlFriend);
+                ITEMS.clear();
                 break;
             }
             case R.id.btn_submit: {
